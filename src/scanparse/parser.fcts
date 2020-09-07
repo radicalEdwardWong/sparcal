@@ -1,0 +1,8 @@
+/*
+ * parser.fcts
+ */
+
+#include <stream.h>
+void yyerror(char* s) {
+	cout << "error has occurred..." << s << endl;
+}

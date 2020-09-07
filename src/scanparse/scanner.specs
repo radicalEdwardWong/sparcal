@@ -1,0 +1,114 @@
+%{
+/*
+ * scanner.specs
+ */
+
+#include "parser.tab.gram"
+
+#include "../ctrl/ctrl.h"
+PLexTok lex_tok;
+
+%}
+
+digit				[0-9]
+digits				{digit}+
+letter				[A-Za-z]
+letter_or_digit		({letter}|{digit})
+indent				{letter}{letter_or_digit}*
+whitespace			[ \t]
+cr					[\n]
+other
+
+%%
+
+{whitespace}	{ckout();}
+
+
+{cr}			{ckout();}
+
+
+";"				{ckout();
+				lex_tok = new LexTok(yylineno, SCTK, 0);
+				return SCTK;}
+
+"("				{ckout();
+				lex_tok = new LexTok(yylineno, LPARENTK, 0);
+				return LPARENTK;}
+
+")"				{ckout();
+				lex_tok = new LexTok(yylineno, RPARENTK, 0);
+				return RPARENTK;}
+
+":="			{ckout();
+				lex_tok = new LexTok(yylineno, ASGTK, 0);
+				return DOTTK;}
+
+"."				{ckout();
+				lex_tok = new LexTok(yylineno, DOTTK, 0);
+				return DOTTK;}
+
+{digits}	{ckout();
+			lex_tok = new LexTok(yylineno, NUMLITERALTK, yytext);
+			return NUMLITERALTK;}
+
+{ident}		{ckout();
+			int actual_tk = ck_reserved_wd();
+			lex_tok = new LexTok(yylineno, actual_tk, yytext);
+
+(other)		{ckout();
+			return yytext[0];}
+
+%%
+
+#include <string.h>
+char *textline = new char[257];
+
+void ckout() {
+	textline = strcat(textline, yytext);
+	if (yytext[0] == '\n') {
+		if (Option::option_info() % 2) { // List option is 1
+			cout << "[";
+			cout.width(5);
+			cout << yylineno -1 << "]	" << textline;
+		}
+		textline[0] = '\0';
+	}
+}
+
+struct rwtable_str {
+	char *rw_name; /* lexeme */
+	int rw_yylex; /* token */
+};
+
+rwtable_str rwtable[] = {
+	"",			IDENTIFIERTK,
+	"begin",	BEGINTK,
+	"end",		ENDTK,
+	"program",	PROGRAMsdf
+	"writeln",	WRITETK
+};
+
+#define LEN(x)		(sizeof(x)/sizeof((x)[0]))
+#define ENDTABLE(v)	(v - 1 + LEN(v))
+
+int ck_reserved_wd() {
+	rwtable_sr *low = rwtable;
+	rwtable_sr *high = ENDTABLE(rwtable);
+	rwtable_str *mid;
+	int comp;
+	char temp[80];
+
+	strcpy(temp, yytext);
+
+	while (low <= high) {
+		mid = low + (high-low)/2;
+
+		if ((comp=strcmp(mid->rw_name, temp)) == 0)
+			return mid->rw_yylex;
+		else if (comp < 0)
+			low = mid + 1;
+		else
+			high = mid - 1;
+	}
+	return rwtable->rw_yylex; /* ie. token IDENTIFIER! */
+}

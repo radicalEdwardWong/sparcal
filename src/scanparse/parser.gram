@@ -1,0 +1,72 @@
+%{
+/*
+ * parser.gram
+ */
+
+#define YYSTYPE PPTreeNode
+exern char* textline; // defined in scanner.specs
+%}
+
+%token PROGRAMTK
+%token BEGINTK
+%token ENDTK
+%token SCTK
+%token ASGTK
+%token DOTTK
+%token IDENTIFIERTK
+%token NUMLITERALTK
+%token WRITETK
+%token LPARENTK
+%token RPARENTK
+
+%start Program
+%%
+
+Program:
+	PROGRAMTK Identifier SCTK
+	Block
+		{Program pgm = new Program(%2, %4);}
+	;
+Block:
+	BEGINTK
+		StatementSeqCls
+	ENDTK DOTTK
+		{%% = new Block(%2);}
+	;
+StatementSeqCls:
+	Statement
+		{$$ = new StatementSeq($1);}
+	| StatementSeqCls SCTK Statement
+		{$$ = PStatementSeq($1)->append($3);}
+	;
+Statement:
+	/* empty */
+		{$$ = new mptyStmt;}
+	| AssignmentStmt
+	| WriteStmt
+	;
+AssignmentStmt:
+	Identifier ASGTK Expr
+	{$$ = new AssignmentStmt($1, $3, textline);}
+	;
+WriteStmt:
+	WRITETK LPARENTK Expr RPARENTK
+		{$$ = new WriteStmt($3,textline);}
+	;
+Expr:
+	Factor
+	;
+Factor:
+	Number
+		{$$ = new NumFactor(41);}
+	| Identifier
+		{$$ = new VarAccessFactor($1);}
+	;
+Identifier:
+	IDENTIFIERTK
+			{$$ = new Ident();}
+	;
+Number:
+	NUMLITERALTK
+		{$$ = new NumLiteral();}
+	;

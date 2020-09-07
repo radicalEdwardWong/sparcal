@@ -1,0 +1,7 @@
+/*
+ * scanner.fcts
+ */
+
+int yywrap() {
+	return 1;
+}
