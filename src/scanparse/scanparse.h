@@ -2,7 +2,7 @@
  * LexTok Definition
  */
 
-typedef class LexTok *PLexTok
+typedef class LexTok *PLexTok;
 class LexTok {
 	public:
 		LexTok(int LineNo, int Token, char *Lexeme);
@@ -19,9 +19,9 @@ class PTree;
 typedef class ScanParse *PScanParse;
 class ScanParse {
 	public:
-		ScanParse()
+		ScanParse();
 		void print();
 		friend class Controller;
-	private
+	private:
 		PTree *parse_tree;
-}
+};

@@ -7,7 +7,7 @@ class Option {
 	public:
 		static int option_info();
 		friend class Controller;
-	private;
+	private:
 		Option();
 		static int list;
 		static int emit;
@@ -23,7 +23,7 @@ class Controller {
 	public:
 		Controller(int argc, char** argv);
 		void print();
-	private
+	private:
 		Symtab *std_table;
 		PTree *parse_tree;
 		int open_file(char*);

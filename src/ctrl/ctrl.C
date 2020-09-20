@@ -3,24 +3,27 @@
  *
  */
 
-#include <iosream.h>
+#include <iostream>
 #include <stdio.h>
-#include <string..h>
+#include <string.h>
 
-#include "../scanparse/scanparseh"
+#include "../scanparse/scanparse.h"
 #include "../p_tree/p_tree.h"
 #include "../symtab/symtab.h"
 
 #include "ctrl.h"
 
+using namespace std;
+
+class Symtab;
 
 int Option::list;
 
 int Option::emit;
 Option::Option() {
 	//cout << "Option() " << endl;
-		list = 0;
-		emit = 0;
+	list = 0;
+	emit = 0;
 }
 
 int Option::option_info() {
@@ -35,7 +38,6 @@ int Controller::open_file(char* source_file) {
 						 (source_file[length -1] == 'p') )) {
 		if (!freopen(source_file, "r", stdin)) {
 			cout << "	Cannot open file -- Sorry " << endl;
-
 			return 0;
 		} else {
 			return 1;
@@ -45,7 +47,6 @@ int Controller::open_file(char* source_file) {
 		return 0;
 	} else {
 		cout << "	File must have a .p extension" << endl;
-
 		return 0;
 	}
 }
@@ -54,10 +55,9 @@ int Controller::open_file(char* source_file) {
 Controller::Controller(int argc, char** argv) {
 	//cout << "Controller " << endl;
 
-
 	this->std_table = new Symtab;
 	PScope scp = new Scope;
-	scp->vista = this->std_table;
+	scp->visible_symtab = this->std_table;
 
 	char *source_file = new char[80];
 	this->parse_tree = 0;
@@ -75,7 +75,7 @@ Controller::Controller(int argc, char** argv) {
 						Option::list = 1;
 						continue;
 
-					case 'e'
+					case 'e':
 						Option::emit = 2;
 
 					default:
@@ -86,9 +86,10 @@ Controller::Controller(int argc, char** argv) {
 			}
 		}
 	}
+
 	if (open_file(source_file)) {
 		ios::sync_with_stdio();
-		PScanParse sp = new ScaParse;
+		PScanParse sp = new ScanParse;
 		this->parse_tree = sp->parse_tree;
 
 		if (Option::emit) {
@@ -98,5 +99,4 @@ Controller::Controller(int argc, char** argv) {
 		}
 	}
 }
-
 

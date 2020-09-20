@@ -2,7 +2,10 @@
  * parser.fcts
  */
 
-#include <stream.h>
+#include <iostream>
+
+use namespace std;
+
 void yyerror(char* s) {
 	cout << "error has occurred..." << s << endl;
 }

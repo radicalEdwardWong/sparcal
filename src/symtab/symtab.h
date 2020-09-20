@@ -10,22 +10,22 @@ typedef class Scope *PScope;
 class Scope {
 	public:
 		Scope() {;}
-		static Symtab *get_vista() {return vista;}
+		static Symtab *get_visible_symtab() {return visible_symtab;}
 		friend class Controller;
-	private
-		static Symtab *vista;
+	private:
+		static Symtab *visible_symtab;
 };
 
-typedef class SymbtabEntry *PSymtabEntry;
-class SymbtabEntry {
+typedef class SymtabEntry *PSymtabEntry;
+class SymtabEntry {
 	public:
 		SymtabEntry() {;}
 		SymtabEntry(char *Name);
-		friend class Symtab
+		friend class Symtab;
 		virtual int emit();
 	protected:
 		char *name;
-}
+};
 
 typedef class VarAtt *PVarAtt;
 class VarAtt : public SymtabEntry {
@@ -41,7 +41,7 @@ class VarAtt : public SymtabEntry {
 };
 
 typedef class Symtab *PSymtab;
-class Symtab;
+class Symtab {
 	public:
 		Symtab();
 		int	insert(PSymtabEntry);

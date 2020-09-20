@@ -1,0 +1,313 @@
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: PROGRAMTK Identifier SCTK Block
+
+    2 Block: BEGINTK StatementSeqCls ENDTK DOTTK
+
+    3 StatementSeqCls: Statement
+    4                | StatementSeqCls SCTK Statement
+
+    5 Statement: %empty
+    6          | AssignmentStmt
+    7          | WriteStmt
+
+    8 AssignmentStmt: Identifier ASGTK Expr
+
+    9 WriteStmt: WRITETK LPARENTK Expr RPARENTK
+
+   10 Expr: Factor
+
+   11 Factor: Number
+   12       | Identifier
+
+   13 Identifier: IDENTIFIERTK
+
+   14 Number: NUMLITERALTK
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    PROGRAMTK (258) 1
+    BEGINTK (259) 2
+    ENDTK (260) 2
+    SCTK (261) 1 4
+    ASGTK (262) 8
+    DOTTK (263) 2
+    IDENTIFIERTK (264) 13
+    NUMLITERALTK (265) 14
+    WRITETK (266) 9
+    LPARENTK (267) 9
+    RPARENTK (268) 9
+
+
+Nonterminals, with rules where they appear
+
+    $accept (14)
+        on left: 0
+    Program (15)
+        on left: 1
+        on right: 0
+    Block (16)
+        on left: 2
+        on right: 1
+    StatementSeqCls (17)
+        on left: 3 4
+        on right: 2 4
+    Statement (18)
+        on left: 5 6 7
+        on right: 3 4
+    AssignmentStmt (19)
+        on left: 8
+        on right: 6
+    WriteStmt (20)
+        on left: 9
+        on right: 7
+    Expr (21)
+        on left: 10
+        on right: 8 9
+    Factor (22)
+        on left: 11 12
+        on right: 10
+    Identifier (23)
+        on left: 13
+        on right: 1 8 12
+    Number (24)
+        on left: 14
+        on right: 11
+
+
+State 0
+
+    0 $accept: . Program $end
+
+    PROGRAMTK  shift, and go to state 1
+
+    Program  go to state 2
+
+
+State 1
+
+    1 Program: PROGRAMTK . Identifier SCTK Block
+
+    IDENTIFIERTK  shift, and go to state 3
+
+    Identifier  go to state 4
+
+
+State 2
+
+    0 $accept: Program . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+   13 Identifier: IDENTIFIERTK .
+
+    $default  reduce using rule 13 (Identifier)
+
+
+State 4
+
+    1 Program: PROGRAMTK Identifier . SCTK Block
+
+    SCTK  shift, and go to state 6
+
+
+State 5
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+State 6
+
+    1 Program: PROGRAMTK Identifier SCTK . Block
+
+    BEGINTK  shift, and go to state 7
+
+    Block  go to state 8
+
+
+State 7
+
+    2 Block: BEGINTK . StatementSeqCls ENDTK DOTTK
+
+    IDENTIFIERTK  shift, and go to state 3
+    WRITETK       shift, and go to state 9
+
+    $default  reduce using rule 5 (Statement)
+
+    StatementSeqCls  go to state 10
+    Statement        go to state 11
+    AssignmentStmt   go to state 12
+    WriteStmt        go to state 13
+    Identifier       go to state 14
+
+
+State 8
+
+    1 Program: PROGRAMTK Identifier SCTK Block .
+
+    $default  reduce using rule 1 (Program)
+
+
+State 9
+
+    9 WriteStmt: WRITETK . LPARENTK Expr RPARENTK
+
+    LPARENTK  shift, and go to state 15
+
+
+State 10
+
+    2 Block: BEGINTK StatementSeqCls . ENDTK DOTTK
+    4 StatementSeqCls: StatementSeqCls . SCTK Statement
+
+    ENDTK  shift, and go to state 16
+    SCTK   shift, and go to state 17
+
+
+State 11
+
+    3 StatementSeqCls: Statement .
+
+    $default  reduce using rule 3 (StatementSeqCls)
+
+
+State 12
+
+    6 Statement: AssignmentStmt .
+
+    $default  reduce using rule 6 (Statement)
+
+
+State 13
+
+    7 Statement: WriteStmt .
+
+    $default  reduce using rule 7 (Statement)
+
+
+State 14
+
+    8 AssignmentStmt: Identifier . ASGTK Expr
+
+    ASGTK  shift, and go to state 18
+
+
+State 15
+
+    9 WriteStmt: WRITETK LPARENTK . Expr RPARENTK
+
+    IDENTIFIERTK  shift, and go to state 3
+    NUMLITERALTK  shift, and go to state 19
+
+    Expr        go to state 20
+    Factor      go to state 21
+    Identifier  go to state 22
+    Number      go to state 23
+
+
+State 16
+
+    2 Block: BEGINTK StatementSeqCls ENDTK . DOTTK
+
+    DOTTK  shift, and go to state 24
+
+
+State 17
+
+    4 StatementSeqCls: StatementSeqCls SCTK . Statement
+
+    IDENTIFIERTK  shift, and go to state 3
+    WRITETK       shift, and go to state 9
+
+    $default  reduce using rule 5 (Statement)
+
+    Statement       go to state 25
+    AssignmentStmt  go to state 12
+    WriteStmt       go to state 13
+    Identifier      go to state 14
+
+
+State 18
+
+    8 AssignmentStmt: Identifier ASGTK . Expr
+
+    IDENTIFIERTK  shift, and go to state 3
+    NUMLITERALTK  shift, and go to state 19
+
+    Expr        go to state 26
+    Factor      go to state 21
+    Identifier  go to state 22
+    Number      go to state 23
+
+
+State 19
+
+   14 Number: NUMLITERALTK .
+
+    $default  reduce using rule 14 (Number)
+
+
+State 20
+
+    9 WriteStmt: WRITETK LPARENTK Expr . RPARENTK
+
+    RPARENTK  shift, and go to state 27
+
+
+State 21
+
+   10 Expr: Factor .
+
+    $default  reduce using rule 10 (Expr)
+
+
+State 22
+
+   12 Factor: Identifier .
+
+    $default  reduce using rule 12 (Factor)
+
+
+State 23
+
+   11 Factor: Number .
+
+    $default  reduce using rule 11 (Factor)
+
+
+State 24
+
+    2 Block: BEGINTK StatementSeqCls ENDTK DOTTK .
+
+    $default  reduce using rule 2 (Block)
+
+
+State 25
+
+    4 StatementSeqCls: StatementSeqCls SCTK Statement .
+
+    $default  reduce using rule 4 (StatementSeqCls)
+
+
+State 26
+
+    8 AssignmentStmt: Identifier ASGTK Expr .
+
+    $default  reduce using rule 8 (AssignmentStmt)
+
+
+State 27
+
+    9 WriteStmt: WRITETK LPARENTK Expr RPARENTK .
+
+    $default  reduce using rule 9 (WriteStmt)

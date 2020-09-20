@@ -4,13 +4,13 @@
  */
 
 // header
-#include <stream.h>
+#include <iostream>
 #include "../p_tree/p_tree.h"
 #include "scanparse.h"
 // end header
 
 #include <string.h>
-LexTox :: LexTok(int LineNo, int Token, char *Lexeme) {
+LexTok :: LexTok(int LineNo, int Token, char *Lexeme) {
 	//cout << "LexTok(LineNo, Token, Lexeme)" << endl;
 	line_no = LineNo;
 	token = Token;
@@ -23,7 +23,7 @@ LexTox :: LexTok(int LineNo, int Token, char *Lexeme) {
 
 PPTreeNode prgm_node; // Gloabl! Set by top of tree Program
 
-#include "scanparse.tct"
+#include "scanparse.fct"
 
 ScanParse :: ScanParse() {
 	//cout << "SanParse()" << endl;

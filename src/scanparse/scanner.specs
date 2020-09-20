@@ -8,16 +8,18 @@
 #include "../ctrl/ctrl.h"
 PLexTok lex_tok;
 
+void ckout();
+int ck_reserved_wd();
+
 %}
 
 digit				[0-9]
 digits				{digit}+
 letter				[A-Za-z]
 letter_or_digit		({letter}|{digit})
-indent				{letter}{letter_or_digit}*
+ident				{letter}{letter_or_digit}*
 whitespace			[ \t]
 cr					[\n]
-other
 
 %%
 
@@ -54,13 +56,15 @@ other
 {ident}		{ckout();
 			int actual_tk = ck_reserved_wd();
 			lex_tok = new LexTok(yylineno, actual_tk, yytext);
-
-(other)		{ckout();
-			return yytext[0];}
+			return actual_tk;}
 
 %%
 
 #include <string.h>
+#include <iostream>
+
+using namespace std;
+
 char *textline = new char[257];
 
 void ckout() {
@@ -84,7 +88,7 @@ rwtable_str rwtable[] = {
 	"",			IDENTIFIERTK,
 	"begin",	BEGINTK,
 	"end",		ENDTK,
-	"program",	PROGRAMsdf
+	"program",	PROGRAMTK,
 	"writeln",	WRITETK
 };
 
@@ -92,8 +96,8 @@ rwtable_str rwtable[] = {
 #define ENDTABLE(v)	(v - 1 + LEN(v))
 
 int ck_reserved_wd() {
-	rwtable_sr *low = rwtable;
-	rwtable_sr *high = ENDTABLE(rwtable);
+	rwtable_str *low = rwtable;
+	rwtable_str *high = ENDTABLE(rwtable);
 	rwtable_str *mid;
 	int comp;
 	char temp[80];
@@ -103,7 +107,7 @@ int ck_reserved_wd() {
 	while (low <= high) {
 		mid = low + (high-low)/2;
 
-		if ((comp=strcmp(mid->rw_name, temp)) == 0)
+		if ((comp = strcmp(mid->rw_name, temp)) == 0)
 			return mid->rw_yylex;
 		else if (comp < 0)
 			low = mid + 1;
@@ -112,3 +116,4 @@ int ck_reserved_wd() {
 	}
 	return rwtable->rw_yylex; /* ie. token IDENTIFIER! */
 }
+
