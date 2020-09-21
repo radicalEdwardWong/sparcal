@@ -4,7 +4,7 @@
  */
 
 #define YYSTYPE PPTreeNode
-exern char* textline; // defined in scanner.specs
+extern char* textline; // defined in scanner.specs
 %}
 
 %token PROGRAMTK
@@ -25,23 +25,23 @@ exern char* textline; // defined in scanner.specs
 Program:
 	PROGRAMTK Identifier SCTK
 	Block
-		{Program pgm = new Program(%2, %4);}
+		{PProgram pgm = new Program($2, $4);}
 	;
 Block:
 	BEGINTK
-		StatementSeqCls
+		StatementSeq
 	ENDTK DOTTK
-		{%% = new Block(%2);}
+		{$$ = new Block($2);}
 	;
-StatementSeqCls:
+StatementSeq:
 	Statement
 		{$$ = new StatementSeq($1);}
-	| StatementSeqCls SCTK Statement
+	| StatementSeq SCTK Statement
 		{$$ = PStatementSeq($1)->append($3);}
 	;
 Statement:
 	/* empty */
-		{$$ = new mptyStmt;}
+		{$$ = new EmptyStmt;}
 	| AssignmentStmt
 	| WriteStmt
 	;
@@ -58,7 +58,7 @@ Expr:
 	;
 Factor:
 	Number
-		{$$ = new NumFactor(41);}
+		{$$ = new NumFactor($1);}
 	| Identifier
 		{$$ = new VarAccessFactor($1);}
 	;

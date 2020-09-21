@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-use namespace std;
+using namespace std;
 
 void yyerror(char* s) {
 	cout << "error has occurred..." << s << endl;

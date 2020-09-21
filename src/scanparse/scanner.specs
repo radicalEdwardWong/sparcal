@@ -3,7 +3,7 @@
  * scanner.specs
  */
 
-#include "parser.tab.gram"
+#include "y.tab.h"
 
 #include "../ctrl/ctrl.h"
 PLexTok lex_tok;
