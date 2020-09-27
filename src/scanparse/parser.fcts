@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void yyerror(char* s) {
+void yyerror(string s) {
 	cout << "error has occurred..." << s << endl;
 }
 */
