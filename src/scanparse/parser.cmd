@@ -1,7 +1,7 @@
+/define YYERROR/a\
+#include "parser.fcts"\nvoid yyerror(char* s);
 /define YYERRCODE/a\
 #include "parser.h"
 /yynewerror:/d
-/yyerrlab:/d
 /++yynerrs;/d
-$a\
-#include "parser.fcts"
+/extern YYSTYPE yylval;/d

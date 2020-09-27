@@ -16,7 +16,12 @@ scanner.tmp:	scanner.h scanner.specs scanner.fcts parser.gram
 
 parser.tmp:		parser.gram parser.fcts
 				yacc -vd parser.gram
-				sed -f parser.cmd y.tab.c > parser.tmp
+				mv y.tab.h y.tab.h.tmp
+				mv y.tab.c y.tab.c.tmp
+				sed '/extern YYSTYPE yylval;/d' y.tab.h.tmp > y.tab.h
+				sed -f parser.cmd y.tab.c.tmp > y.tab.c
+				cp y.tab.c parser.tmp
+				rm y.tab.h.tmp y.tab.c.tmp
 
 clean:
 				rm -f *.o lex.yy.c y.tab.c y.o* *tmp*\

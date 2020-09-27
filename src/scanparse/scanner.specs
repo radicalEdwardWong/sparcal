@@ -85,11 +85,11 @@ struct rwtable_str {
 };
 
 rwtable_str rwtable[] = {
-	"",			IDENTIFIERTK,
-	"begin",	BEGINTK,
-	"end",		ENDTK,
-	"program",	PROGRAMTK,
-	"writeln",	WRITETK
+	(char *)"",			IDENTIFIERTK,
+	(char *)"begin",	BEGINTK,
+	(char *)"end",		ENDTK,
+	(char *)"program",	PROGRAMTK,
+	(char *)"writeln",	WRITETK
 };
 
 #define LEN(x)		(sizeof(x)/sizeof((x)[0]))
