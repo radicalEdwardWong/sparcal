@@ -1,6 +1,6 @@
 # Makefile for Main module
 
-CC = g++ -std=c++0x
+CC = g++ -v
 
 SUBDIR	=	main ctrl scanparse p_tree symtab
 

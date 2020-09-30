@@ -23,7 +23,7 @@ PLstSeqBldr LstSeqBldr :: append(PLstSeqBldr ToBeAdded) {
 }
 
 PTreeNode :: PTreeNode() {
-	//cout << "PTreeNode" << end1;
+	//cout << "PTreeNode" << endl;
 	extern LexTok *lex_tok;
 	lt = lex_tok;
 }
