@@ -1,19 +1,19 @@
 /*
  * symtab.C
  */
-#include <iostream.h>
+#include <iostream>
 #include <string.h>
 
 #include "symtab.h"
 /* end of header */
 
-Symbtab :: Symtab() {
+Symtab :: Symtab() {
 	//cout << "Symtab::()"<< endl;
 	tablesize = 17; // Must be a prime for good performance
 	hashtable = new int[tablesize];
 	next_location = 1; // sacrifice 0th spot - hashtable empty:NIL
 	symtab = new PSymtabEntry[tablesize]; // global!!
-	PSymtabEntry tmp = new SymtabEntry("    ");
+	PSymtabEntry tmp = new SymtabEntry((char *)"    ");
 	for (int i = 0; i < tablesize; i++) {
 		hashtable[i] = 0;
 		symtab[i] = tmp;
@@ -60,28 +60,29 @@ int Symtab :: insert (PSymtabEntry info) {
 	hashtable[Try] = next_location;
 	//cout << "entered current location in table " << Try << endl;
 	symtab[next_location++] = info;
-	return0; // success!
+	return 0; // success!
 }
 
 PSymtabEntry Symtab :: lookup(char *Name) {
 	//cout << "Symtab :: lookup for " << Name ;
-	int cur_tabe_size = tablesize;
-	int try, orig_try, hash_try;
+	int cur_table_size = tablesize;
+	int Try, orig_try, hash_try;
 
-	orig_try = try = hash(Name);
+	orig_try = Try = hash(Name);
 //cout << "orig_try " << orig_try << "\n";
-	hash_try = hashtable[try];
+	hash_try = hashtable[Try];
 //cout << "hash_try " << hash_try << endl;
 	while (hash_try) {
 		if (!strcmp(symtab[hash_try]->name, Name)) {
-			return symtab[has_try];
+			return symtab[hash_try];
 		}
-		if (++try >= cur_table_size) try = 0; // wrap around
-		if (try == orig_try) {
+		if (++Try >= cur_table_size)
+			Try = 0; // wrap around
+		if (Try == orig_try)
 			return symtab[0];
-		} else {
-			hash_try = hashtable[try];
-		}
+		else
+			hash_try = hashtable[Try];
+
 //cout << "hash_try " << hash_try  endl;
 	}
 	return 0; // Failure!

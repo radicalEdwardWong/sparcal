@@ -2,16 +2,16 @@
 
 CC = g++ -std=c++0x
 
-SUBDIR	=	main ctrl scanparse p_tree symtab
+SUBDIR	=	main ctrl scanparse p_tree interp emitter symtab
 
 DOTOHS	=	ctrl/ctrl.o scanparse/scanparse.o p_tree/p_tree.o \
-			symtab/symtab.o main/Main.o
+			interp/interp.o emitter/emit.o symtab/symtab.o main/Main.o
 
 PROGRAM:
 			for i in ${SUBDIR}; do \
 				(echo $$i; cd $$i; make;); \
 			done
-			$(CC) -o sparcal $(DOTOHS)
+			CC -o sparcal $(DOTOHS)
 
 clean:
 			for i in ${SUBDIR}; do \

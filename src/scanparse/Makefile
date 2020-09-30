@@ -1,4 +1,4 @@
-CC = g++
+CC = g++ -c
 
 #Makefile for SPARCal (Pascal-to-SPARC) compiler
 PROGRAM:		scanparse.o

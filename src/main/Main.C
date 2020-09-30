@@ -2,12 +2,12 @@
  * Main.C -- for pascal to SPARC compiler
  */
 
-#include <iostream.h>
+#include <iostream>
 
 #include "../ctrl/ctrl.h"
 
-main(int argc, char** argv) {
+int main(int argc, char** argv) {
 	// count << " Pascal to SPARC" << endl;
 
-	PControllerCts ctl = new Controller(argc, argv);
+	PController ctl = new Controller(argc, argv);
 }

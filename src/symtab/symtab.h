@@ -2,19 +2,7 @@
  * symtab.h
  */
 
-
 class Controller;
-class Symtab;
-
-typedef class Scope *PScope;
-class Scope {
-	public:
-		Scope() {;}
-		static Symtab *get_visible_symtab() {return visible_symtab;}
-		friend class Controller;
-	private:
-		static Symtab *visible_symtab;
-};
 
 typedef class SymtabEntry *PSymtabEntry;
 class SymtabEntry {
@@ -25,6 +13,32 @@ class SymtabEntry {
 		virtual int emit();
 	protected:
 		char *name;
+};
+
+typedef class Symtab *PSymtab;
+class Symtab {
+	public:
+		Symtab();
+		int	insert(PSymtabEntry);
+		PSymtabEntry lookup(char *);
+		int emit();
+	private:
+		int	tablesize;
+		int	next_location;
+		int	*hashtable;
+		PSymtabEntry *symtab;
+		int hash(char *);
+};
+
+typedef class Scope *PScope;
+class Scope {
+	public:
+		Scope() {;}
+		static Symtab *get_visible_symtab() {return visible_symtab;}
+		static void set_visible_symtab(Symtab *S) {visible_symtab = S;}
+		friend class Controller;
+	private:
+		static Symtab *visible_symtab;
 };
 
 typedef class VarAtt *PVarAtt;
@@ -38,19 +52,4 @@ class VarAtt : public SymtabEntry {
 		int emit();
 	private:
 		int value;
-};
-
-typedef class Symtab *PSymtab;
-class Symtab {
-	public:
-		Symtab();
-		int	insert(PSymtabEntry);
-		PSymtabEntry lookup(char*);
-		int emit();
-	private:
-		int	tablesize;
-		int	next_location;
-		int	*hashtable;
-		PSymtabEntry *symtab;
-		int hash(char *);
 };

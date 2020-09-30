@@ -1,4 +1,4 @@
-CC = g++
+CC = g++ -c
 
 # Makefile for Pascal-to-SPARC compiler parse tree nodes
 PROGRAM: p_tree.o

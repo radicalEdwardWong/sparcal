@@ -57,7 +57,7 @@ Controller::Controller(int argc, char** argv) {
 
 	this->std_table = new Symtab;
 	PScope scp = new Scope;
-	scp->visible_symtab = this->std_table;
+	scp->set_visible_symtab(this->std_table);
 
 	char *source_file = new char[80];
 	this->parse_tree = 0;

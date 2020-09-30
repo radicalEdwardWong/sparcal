@@ -1,4 +1,4 @@
-CC = g++
+CC = g++ -c
 
 PROGRAM:	ctrl.h ctrl.o
 
