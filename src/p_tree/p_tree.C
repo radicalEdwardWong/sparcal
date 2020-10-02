@@ -96,6 +96,11 @@ int NumFactor :: evaluate() {
 	return Expr::value;
 }
 
+int NumFactor :: emit() {
+	cout << "NumFactor::emit() BASE CLASS !!!" << endl;
+	return 0;
+}
+
 VarAccessFactor :: VarAccessFactor(PPTreeNode Ident) {
 	//cout << "VarAccessFactor() " << endl;
 	if (!Ident) {
@@ -123,10 +128,30 @@ int VarAccessFactor :: evaluate() {
 	return PVarAtt(found)->get_value();
 }
 
+int VarAccessFactor :: emit() {
+	cout << "VarAccessFactor::emit() BASE CLASS !!!" << endl;
+	return 0;
+}
+
 Statement :: Statement(char *StmtText) {
 	//cout << "Statement()" << endl;
 	stmt_text = new char[strlen(StmtText)+1];
 	strcpy(stmt_text, StmtText);
+}
+
+int Statement :: emit() {
+	cout << "Statement:emit() BASE CLASS !!!" << endl;
+	return 0;
+}
+
+int EmptyStmt :: execute() {
+	cout << "EmptyStmt::execute() BASECLASS !!!!!" << endl;
+	return 0;
+}
+
+int EmptyStmt :: emit() {
+	cout << "EmptyStmt:emit() BASE CLASS !!!" << endl;
+	return 0;
 }
 
 AssignmentStmt :: AssignmentStmt(
@@ -142,6 +167,16 @@ AssignmentStmt :: AssignmentStmt(
 	expr = Expr;
 }
 
+int AssignmentStmt :: execute() {
+	cout << "AssignmentStmt::execute() BASECLASS !!!!!" << endl;
+	return 0;
+}
+
+int AssignmentStmt :: emit() {
+	cout << "AssignmentStmt::emit() BASE CLASS !!!" << endl;
+	return 0;
+}
+
 WriteStmt :: WriteStmt(PPTreeNode Expr, char *TextLine): Statement(TextLine) {
 	//cout << "WriteStmt() " << endl;
 	if (!Expr) {
@@ -150,9 +185,29 @@ WriteStmt :: WriteStmt(PPTreeNode Expr, char *TextLine): Statement(TextLine) {
 	expr = Expr;
 }
 
+int WriteStmt :: execute() {
+	cout << "WriteStmt::execute() BASECLASS !!!!!" << endl;
+	return 0;
+}
+
+int WriteStmt :: emit() {
+	cout << "WriteStmt::emit() BASE CLASS !!!" << endl;
+	return 0;
+}
+
 StatementSeq :: StatementSeq(PPTreeNode Stmt) {
 	//cout << "StatementSeq() " << endl;
 	seq_tail = seq_head = PStatement(Stmt);
+}
+
+int StatementSeq :: execute() {
+	cout << "StatementSeq::execute() BASECLASS !!!!!" << endl;
+	return 0;
+}
+
+int StatementSeq :: emit() {
+	cout << "StatementSeq::emit() BASE CLASS !!!" << endl;
+	return 0;
 }
 
 PPTreeNode StatementSeq :: append(PPTreeNode Stmt) {
@@ -170,6 +225,16 @@ Block :: Block(PPTreeNode StmtSeq) {
 	stmt_seq = StmtSeq;
 }
 
+int Block :: execute() {
+	cout << "Block::execute() BASECLASS !!!!!" << endl;
+	return 0;
+}
+
+int Block :: emit() {
+	cout << "Block::emit() BASE CLASS !!!" << endl;
+	return 0;
+}
+
 extern PPTreeNode prgm_node; //declared in scanparse.C
 Program :: Program(PPTreeNode Ident, PPTreeNode Block) {
 	//cout << "Program() " << endl;
@@ -177,6 +242,16 @@ Program :: Program(PPTreeNode Ident, PPTreeNode Block) {
 	block = PBlock(Block);
 	std_table = Scope::get_visible_symtab();
 	prgm_node = this;
+}
+
+int Program :: execute() {
+	cout << "Program::execute() BASECLASS !!!!!" << endl;
+	return 0;
+}
+
+int Program :: emit() {
+	cout << "Program::emit() BASE CLASS !!!" << endl;
+	return 0;
 }
 
 void Program :: print() {
@@ -191,4 +266,14 @@ PTree :: PTree(PPTreeNode Root) {
 void PTree :: print() {
 	cout << "PTree " << endl;
 	root->print();
+}
+
+int PTree :: emit() {
+	cout << "PTree::emit() BASE CLASS !!!" << endl;
+	return 0;
+}
+
+int PTree :: execute() {
+	cout << "PTree::execute() BASECLASS !!!!!" << endl;
+	return 0;
 }

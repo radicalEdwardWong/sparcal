@@ -1,7 +1,6 @@
 /*
  * parser.fcts
  */
-/*
 #include <iostream>
 
 using namespace std;
@@ -9,4 +8,3 @@ using namespace std;
 void yyerror(string s) {
 	cout << "error has occurred..." << s << endl;
 }
-*/

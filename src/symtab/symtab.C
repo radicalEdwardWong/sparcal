@@ -1,11 +1,38 @@
 /*
  * symtab.C
  */
+
 #include <iostream>
 #include <string.h>
 
 #include "symtab.h"
-/* end of header */
+
+using namespace std;
+
+PSymtab Scope :: visible_symtab;
+
+SymtabEntry :: SymtabEntry(char *Name) {
+	//cout << "SymtabEntry()" << endl;
+	name = Name;
+}
+
+int SymtabEntry :: emit() {
+	cout << "SymtabEntry::emit() BASE CLASS!!!!" << endl;
+	return 0;
+}
+
+VarAtt :: VarAtt(char *Name, int Value) : SymtabEntry(Name) {
+	//cout << "VarAtt(Name, Value)" << endl;
+	value = Value;
+}
+
+int VarAtt :: emit() {
+	cout << "VarAtt::emit() BASE CLASS!!!!" << endl;
+	return 0;
+}
+
+
+/* symtab */
 
 Symtab :: Symtab() {
 	//cout << "Symtab::()"<< endl;

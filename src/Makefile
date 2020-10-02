@@ -1,11 +1,11 @@
 # Makefile for Main module
 
-CC = g++ -v
+CC = g++ -Wall -Wextra -pedantic
 
 SUBDIR	=	main ctrl scanparse p_tree symtab
 
-DOTOHS	=	ctrl/ctrl.o scanparse/scanparse.o p_tree/p_tree.o \
-			symtab/symtab.o main/Main.o
+DOTOHS	=	symtab/symtab.o ctrl/ctrl.o scanparse/scanparse.o p_tree/p_tree.o \
+			 main/Main.o
 
 PROGRAM:
 			for i in ${SUBDIR}; do \

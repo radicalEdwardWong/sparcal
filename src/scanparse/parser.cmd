@@ -1,5 +1,5 @@
 /define YYERROR/a\
-#include "parser.fcts"\nvoid yyerror(string s);
+void yyerror(string s);\n#include "parser.fcts"
 /define YYERRCODE/a\
 #include "parser.h"
 /yynewerror:/d

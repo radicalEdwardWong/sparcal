@@ -32,11 +32,10 @@ class Symtab {
 
 typedef class Scope *PScope;
 class Scope {
+	friend class Controller;
 	public:
 		Scope() {;}
 		static Symtab *get_visible_symtab() {return visible_symtab;}
-		static void set_visible_symtab(Symtab *S) {visible_symtab = S;}
-		friend class Controller;
 	private:
 		static Symtab *visible_symtab;
 };
@@ -46,9 +45,8 @@ class VarAtt : public SymtabEntry {
 	public:
 		VarAtt() {;}
 		VarAtt(char* Name, int Value);
-		void set_value(int Value);
+		void set_value(int Value) {value = Value;}
 		int get_value() {return value;}
-
 		int emit();
 	private:
 		int value;

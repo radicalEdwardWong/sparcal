@@ -7,15 +7,16 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ctrl.h"
+
 #include "../scanparse/scanparse.h"
 #include "../p_tree/p_tree.h"
 #include "../symtab/symtab.h"
 
-#include "ctrl.h"
-
 using namespace std;
 
 class Symtab;
+class Scope;
 
 int Option::list;
 
@@ -57,12 +58,12 @@ Controller::Controller(int argc, char** argv) {
 
 	this->std_table = new Symtab;
 	PScope scp = new Scope;
-	scp->set_visible_symtab(this->std_table);
+	scp->visible_symtab = this->std_table;
 
 	char *source_file = new char[80];
 	this->parse_tree = 0;
 	if (argc <= 1) {
-		cout << "	Usage: epc [-el] <filename>.p" << endl;
+		cout << "	Usage: sparcal [-el] <filename>.p" << endl;
 		return;
 	} else {
 		for (int i = 1; i < argc; i++) {
