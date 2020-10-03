@@ -30,3 +30,6 @@ count:
 			for i in ${SUBDIR}; do \
 				(echo $$i; cd $$i; make count;); \
 			done
+
+test:
+			./sparcal -l toast.p
