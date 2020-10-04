@@ -78,6 +78,7 @@ Controller::Controller(int argc, char** argv) {
 
 					case 'e':
 						Option::emit = 2;
+						continue;
 
 					default:
 						cerr << "Unknown option " <<

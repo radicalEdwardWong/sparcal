@@ -26,11 +26,6 @@ VarAtt :: VarAtt(char *Name, int Value) : SymtabEntry(Name) {
 	value = Value;
 }
 
-int VarAtt :: emit() {
-	cout << "VarAtt::emit() BASE CLASS!!!!" << endl;
-	return 0;
-}
-
 
 /* symtab */
 
