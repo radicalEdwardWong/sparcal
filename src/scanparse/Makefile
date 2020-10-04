@@ -11,11 +11,11 @@ scanparse.fct:	parser.tmp scanner.tmp
 				cat scanner.tmp parser.tmp > scanparse.fct
 
 scanner.tmp:	scanner.h scanner.specs scanner.fcts parser.gram
-				lex scanner.specs
+				flex scanner.specs
 				sed -f scanner.cmd lex.yy.c > scanner.tmp
 
 parser.tmp:		parser.gram parser.fcts
-				yacc -vd parser.gram
+				bison -yvd parser.gram
 				mv y.tab.h y.tab.h.tmp
 				mv y.tab.c y.tab.c.tmp
 				sed '/extern YYSTYPE yylval;/d' y.tab.h.tmp > y.tab.h

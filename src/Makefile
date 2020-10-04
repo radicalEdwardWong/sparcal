@@ -33,3 +33,7 @@ count:
 
 test:
 			./pascarm -l toast.p
+
+demo:
+			cat toast.p
+			./pascarm -e toast.p
