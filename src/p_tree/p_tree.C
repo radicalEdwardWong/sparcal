@@ -39,11 +39,11 @@ int PTreeNode :: execute() {
 }
 
 void PTreeNode :: print() {
-	//cout << "PTreeNode::print() " << " lex_tok " << *lt;
+	cout << "PTreeNode::print() " << " lex_tok " << (lt->token) << endl;
 }
 
 NumLiteral :: NumLiteral() {
-	//cout << "NumLitera" << endl;
+	//cout << "NumLiteral" << endl;
 	value = atoi(this->PTreeNode::lt->get_lexeme());
 }
 
