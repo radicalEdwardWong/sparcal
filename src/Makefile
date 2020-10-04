@@ -2,10 +2,10 @@
 
 CC = g++ -Wall -Wextra -pedantic
 
-SUBDIR	=	main ctrl scanparse p_tree symtab
+SUBDIR	=	main ctrl scanparse p_tree symtab interp
 
 DOTOHS	=	symtab/symtab.o ctrl/ctrl.o scanparse/scanparse.o p_tree/p_tree.o \
-			 main/Main.o
+			interp/interp.o main/Main.o
 
 PROGRAM:
 			for i in ${SUBDIR}; do \

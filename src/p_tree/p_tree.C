@@ -144,11 +144,6 @@ int Statement :: emit() {
 	return 0;
 }
 
-int EmptyStmt :: execute() {
-	cout << "EmptyStmt::execute() BASECLASS !!!!!" << endl;
-	return 0;
-}
-
 int EmptyStmt :: emit() {
 	cout << "EmptyStmt:emit() BASE CLASS !!!" << endl;
 	return 0;
@@ -167,11 +162,6 @@ AssignmentStmt :: AssignmentStmt(
 	expr = Expr;
 }
 
-int AssignmentStmt :: execute() {
-	cout << "AssignmentStmt::execute() BASECLASS !!!!!" << endl;
-	return 0;
-}
-
 int AssignmentStmt :: emit() {
 	cout << "AssignmentStmt::emit() BASE CLASS !!!" << endl;
 	return 0;
@@ -185,11 +175,6 @@ WriteStmt :: WriteStmt(PPTreeNode Expr, char *TextLine): Statement(TextLine) {
 	expr = Expr;
 }
 
-int WriteStmt :: execute() {
-	cout << "WriteStmt::execute() BASECLASS !!!!!" << endl;
-	return 0;
-}
-
 int WriteStmt :: emit() {
 	cout << "WriteStmt::emit() BASE CLASS !!!" << endl;
 	return 0;
@@ -198,11 +183,6 @@ int WriteStmt :: emit() {
 StatementSeq :: StatementSeq(PPTreeNode Stmt) {
 	//cout << "StatementSeq() " << endl;
 	seq_tail = seq_head = PStatement(Stmt);
-}
-
-int StatementSeq :: execute() {
-	cout << "StatementSeq::execute() BASECLASS !!!!!" << endl;
-	return 0;
 }
 
 int StatementSeq :: emit() {
@@ -225,11 +205,6 @@ Block :: Block(PPTreeNode StmtSeq) {
 	stmt_seq = StmtSeq;
 }
 
-int Block :: execute() {
-	cout << "Block::execute() BASECLASS !!!!!" << endl;
-	return 0;
-}
-
 int Block :: emit() {
 	cout << "Block::emit() BASE CLASS !!!" << endl;
 	return 0;
@@ -242,11 +217,6 @@ Program :: Program(PPTreeNode Ident, PPTreeNode Block) {
 	block = PBlock(Block);
 	std_table = Scope::get_visible_symtab();
 	prgm_node = this;
-}
-
-int Program :: execute() {
-	cout << "Program::execute() BASECLASS !!!!!" << endl;
-	return 0;
 }
 
 int Program :: emit() {
@@ -270,10 +240,5 @@ void PTree :: print() {
 
 int PTree :: emit() {
 	cout << "PTree::emit() BASE CLASS !!!" << endl;
-	return 0;
-}
-
-int PTree :: execute() {
-	cout << "PTree::execute() BASECLASS !!!!!" << endl;
 	return 0;
 }

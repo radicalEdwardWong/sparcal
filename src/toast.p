@@ -1,6 +1,6 @@
 	program toast;
 	begin
-		eyy := 1;
+		eyy := 2;
 		bee := eyy;
 		writeln(bee)
 	end.
