@@ -11,13 +11,13 @@ PROGRAM:
 			for i in ${SUBDIR}; do \
 				(echo $$i; cd $$i; make;); \
 			done
-			$(CC) -o sparcal $(DOTOHS)
+			$(CC) -o pascarm $(DOTOHS)
 
 clean:
 			for i in ${SUBDIR}; do \
 				(echo $$i; cd $$i; make clean;); \
 			done
-			rm -f *.o tmp* a.out sparcal
+			rm -f *.o tmp* a.out pascarm
 print:
 			/usr/bin/pr -n Main.C Makefile > comp.lst
 			cat comp.lst
@@ -32,4 +32,4 @@ count:
 			done
 
 test:
-			./sparcal -l toast.p
+			./pascarm -l toast.p

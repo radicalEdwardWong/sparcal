@@ -12,16 +12,16 @@ using namespace std;
 
 int VarAtt :: emit() {
 	//cout << "VarAtt::emit()" << endl;
-	cout << "	.align 4" << endl;
-	cout << "	.common _" << SymtabEntry::name;
-	cout << ",4" << endl;
+	cout << "	.align 2" << endl;
+	cout << "	_" << SymtabEntry::name << ":" << endl;
+	cout << "	.int 0" << endl;
 	return 0;
 }
 
 int Symtab :: emit() {
 	//cout << "Symtab::emit()" << endl;
 
-	cout << "	.bss" << endl;
+	cout << ".section .data" << endl;
 	// First (i=1) SymtabEntry object is for program name
 	for (int i=2; i < next_location; i++) {
 		symtab[i] -> emit();
@@ -31,24 +31,19 @@ int Symtab :: emit() {
 
 int NumFactor :: emit() {
 	//cout << "NumFactor::emit()" << endl;
-	cout << "	mov	0x" << hex << Expr::value << ",%o0" << endl;
+	cout << "	mov	r0, #" << Expr::value << endl;
 	return 0;
 }
 
 int VarAccessFactor :: emit() {
 	//cout << "VarAccessFactor::emit()" << endl;
 	char *ident_str = PIdent(ident)->get_name();
-	cout << "	sethi	%hi(_" ;
-		cout << ident_str;
-		cout << "),%o0" << endl;
-	cout << "	ld	[%o0+%lo(_" ;
-		cout << ident_str;
-		cout << ")],%o0" << endl;
+	cout << "	ldr r0,=" << ident_str << endl;
 	return 0;
 }
 
 int Statement :: emit() {
-	cout << "! " << stmt_text << endl;
+	cout << "/* " << stmt_text << " */" << endl;
 	return 0;
 }
 
@@ -63,12 +58,7 @@ int AssignmentStmt :: emit() {
 	expr->emit();
 
 	char *ident_str = PIdent(ident)->get_name();
-	cout << "	sethi	%hi(_" ;
-		cout << ident_str;
-		cout << ">,%o1" << endl;
-	cout << "	st	%o0,[%1o+%lo(_";
-		cout << ident_str;
-		cout << ")]" << endl;
+	cout << "	str	r0,=" << ident_str << endl;
 	return 0;
 }
 
@@ -76,8 +66,7 @@ int WriteStmt :: emit() {
 	//cout << "WriteStmt::emit()" << endl;
 	Statement::emit();
 	expr->emit();
-	cout << "	call	_Writeln,1" << endl;
-	cout << "	nop" << endl;
+	cout << "	bl _Writeln" << endl;
 	return 0;
 }
 
@@ -104,21 +93,15 @@ int PTree :: emit() {
 int Program :: emit() {
 	//cout << "Program::emit() " << endl;
 	if (block && std_table) {
-		cout << "	.text" << endl;
-		cout << "	.global _main" << endl << endl;
-
-		cout << "_main:" << endl;
-		cout << "	save	%sp,-MINWINDOW,%sp" << endl;
+		cout << ".section .init" << endl;
+		cout << "	.globl main" << endl << endl;
+		cout << "	.globl _start" << endl;
+		cout << "	_start:" << endl << endl;
+		cout << "	b main "<< endl;
+		cout << "	.section .text" << endl;
+		cout << "	main:" << endl << endl;
 
 		this->block->emit();
-
-		cout << "	ret" << endl;
-		cout << endl;
-		cout << "	.data" << endl;
-		cout <<	"#define DW(x)	(((x)+7&(~0x07))" << endl;
-		cout << "#define MINFRAME ((16+1+6)*4)" << endl;
-		cout << "	MINWINDOW = 96 /* DW(MINFRAME) */" << endl;
-
 		this->std_table->emit();
 
 		return 0;
