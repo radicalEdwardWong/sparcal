@@ -25,9 +25,7 @@ cr					[\n]
 
 {whitespace}	{ckout();}
 
-
 {cr}			{ckout();}
-
 
 ";"				{ckout();
 				lex_tok = new LexTok(yylineno, SCTK, 0);
@@ -43,7 +41,7 @@ cr					[\n]
 
 ":="			{ckout();
 				lex_tok = new LexTok(yylineno, ASGTK, 0);
-				return DOTTK;}
+				return ASGTK;}
 
 "."				{ckout();
 				lex_tok = new LexTok(yylineno, DOTTK, 0);
@@ -57,6 +55,9 @@ cr					[\n]
 			int actual_tk = ck_reserved_wd();
 			lex_tok = new LexTok(yylineno, actual_tk, yytext);
 			return actual_tk;}
+
+.			{ckout();
+			return yytext[0];}
 
 %%
 

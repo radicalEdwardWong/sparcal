@@ -32,7 +32,11 @@ int Option::option_info() {
 }
 
 int Controller::open_file(char* source_file) {
-	//cout<< "Conroller::open_file(" << source_file << ") " << endl;
+<<<<<<< HEAD
+	//cout<< "Conroller::open_ile()" << source_file << endl;
+=======
+	cout<< "Conroller::open_file(" << source_file << ") " << endl;
+>>>>>>> 3511e33... fixing typeo bug in parser
 	int length = strlen(source_file);
 	//Check for .p extension
 	if ((length > 1) && ((source_file[length -2] == '.') &&

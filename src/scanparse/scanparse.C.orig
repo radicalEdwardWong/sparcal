@@ -7,6 +7,7 @@
 #include <iostream>
 #include "../p_tree/p_tree.h"
 #include "scanparse.h"
+// end header
 
 #include <string.h>
 LexTok :: LexTok(int LineNo, int Token, char *Lexeme) {
@@ -25,8 +26,14 @@ PPTreeNode prgm_node; // Gloabl! Set by top of tree Program
 #include "scanparse.fct"
 
 ScanParse :: ScanParse() {
+<<<<<<< HEAD
 	//cout << "SanParse()" << endl;
 	yyparse();
+=======
+	cout << "ScanParse()" << endl;
+	int parseRes = yyparse();
+	cout << "parse result: " << parseRes << endl;
+>>>>>>> 3511e33... fixing typeo bug in parser
 	parse_tree = new PTree(prgm_node);
 }
 // end ScanParse implementation
