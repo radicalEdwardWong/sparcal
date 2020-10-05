@@ -1,5 +1,6 @@
 # Makefile for Main module
 
+OUT = pascarm
 CC = g++ -Wall -Wextra -pedantic
 
 SUBDIR	=	main ctrl scanparse p_tree symtab interp emit
@@ -11,13 +12,14 @@ PROGRAM:
 			for i in ${SUBDIR}; do \
 				(echo $$i; cd $$i; make;); \
 			done
-			$(CC) -o pascarm $(DOTOHS)
+			$(CC) -o $(OUT) $(DOTOHS)
+			mv $(OUT) ../
 
 clean:
 			for i in ${SUBDIR}; do \
 				(echo $$i; cd $$i; make clean;); \
 			done
-			rm -f *.o tmp* a.out pascarm
+			rm -f *.o tmp* a.out ../$(OUT)
 print:
 			/usr/bin/pr -n Main.C Makefile > comp.lst
 			cat comp.lst
@@ -32,8 +34,8 @@ count:
 			done
 
 test:
-			./pascarm -l toast.p
+			../$(OUT) -l toast.p
 
 demo:
 			cat toast.p
-			./pascarm -e toast.p
+			../$(OUT) -e toast.p

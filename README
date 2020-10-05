@@ -1,0 +1,19 @@
+/**************************************
+ * pascarm - a pascal to ARM compiler *
+ **************************************/
+
+To build and run a quick example compilation, run the following from here:
+
+	pushd src && make clean && make && make demo && popd
+
+To just build the compiler:
+
+	pushd src && make clean && make && popd
+
+To run the interpereter:
+
+	pascarm -l pascal_program.p	
+
+To run the emitter (output ARM assembly to stdout):
+
+	pascarm -e pascal_program.p	
