@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string.h>
+#include <stdlib.h>
 
 #include "../scanparse/scanparse.h"
 #include "../symtab/symtab.h"

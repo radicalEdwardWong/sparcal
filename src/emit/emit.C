@@ -14,14 +14,14 @@ int VarAtt :: emit() {
 	//cout << "VarAtt::emit()" << endl;
 	cout << "	.align 2" << endl;
 	cout << "	_" << SymtabEntry::name << ":" << endl;
-	cout << "	.int 0" << endl;
+	cout << "	.int 0" << endl << endl;
 	return 0;
 }
 
 int Symtab :: emit() {
 	//cout << "Symtab::emit()" << endl;
 
-	cout << ".section .data" << endl;
+	cout << endl << ".section .data" << endl << endl;
 	// First (i=1) SymtabEntry object is for program name
 	for (int i=2; i < next_location; i++) {
 		symtab[i] -> emit();
@@ -31,7 +31,7 @@ int Symtab :: emit() {
 
 int NumFactor :: emit() {
 	//cout << "NumFactor::emit()" << endl;
-	cout << "	mov	r0, #" << Expr::value << endl;
+	cout << "	mov r0, #" << Expr::value << endl;
 	return 0;
 }
 
@@ -43,7 +43,7 @@ int VarAccessFactor :: emit() {
 }
 
 int Statement :: emit() {
-	cout << "/* " << stmt_text << " */" << endl;
+	cout << endl << "/* " << stmt_text << " */" << endl;
 	return 0;
 }
 
@@ -58,7 +58,7 @@ int AssignmentStmt :: emit() {
 	expr->emit();
 
 	char *ident_str = PIdent(ident)->get_name();
-	cout << "	str	r0,=" << ident_str << endl;
+	cout << "	str r0,=" << ident_str << endl;
 	return 0;
 }
 
@@ -93,13 +93,13 @@ int PTree :: emit() {
 int Program :: emit() {
 	//cout << "Program::emit() " << endl;
 	if (block && std_table) {
-		cout << ".section .init" << endl;
+		cout << ".section .init" << endl << endl;
 		cout << "	.globl main" << endl << endl;
 		cout << "	.globl _start" << endl;
 		cout << "	_start:" << endl << endl;
-		cout << "	b main "<< endl;
-		cout << "	.section .text" << endl;
-		cout << "	main:" << endl << endl;
+		cout << "	b main "<< endl << endl;
+		cout << ".section .text" << endl << endl;
+		cout << "	main:" << endl;
 
 		this->block->emit();
 		this->std_table->emit();
