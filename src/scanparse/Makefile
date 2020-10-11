@@ -1,6 +1,6 @@
 CC = g++ -c
 
-#Makefile for SPARCal (Pascal-to-SPARC) compiler
+#Makefile for scanner and parser
 PROGRAM:		scanparse.o
 
 scanparse.o:	../p_tree/p_tree.h scanparse.h scanparse.C\

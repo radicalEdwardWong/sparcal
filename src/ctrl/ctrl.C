@@ -63,7 +63,7 @@ Controller::Controller(int argc, char** argv) {
 	char *source_file = new char[80];
 	this->parse_tree = 0;
 	if (argc <= 1) {
-		cout << "	Usage: sparcal [-el] <filename>.p" << endl;
+		cout << "	Usage: pascarm [-el] <filename>.p" << endl;
 		return;
 	} else {
 		for (int i = 1; i < argc; i++) {

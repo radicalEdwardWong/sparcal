@@ -1,6 +1,6 @@
 CC = g++ -c
 
-# Makefile for Pascal-to-SPARC compiler parse tree nodes
+# Makefile for parse tree
 PROGRAM: p_tree.o
 
 p_tree.o:	../scanparse/scanparse.h ../symtab/symtab.h\
