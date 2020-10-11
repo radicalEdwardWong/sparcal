@@ -14,14 +14,14 @@ int VarAtt :: emit() {
 	//cout << "VarAtt::emit()" << endl;
 	cout << "	.align 2" << endl;
 	cout << "	_" << SymtabEntry::name << ":" << endl;
-	cout << "	.int 0" << endl << endl;
+	cout << "	.space 4" << endl << endl;
 	return 0;
 }
 
 int Symtab :: emit() {
 	//cout << "Symtab::emit()" << endl;
 
-	cout << endl << ".section .data" << endl << endl;
+	cout << endl << ".section .bss" << endl << endl;
 	// First (i=1) SymtabEntry object is for program name
 	for (int i=2; i < next_location; i++) {
 		symtab[i] -> emit();
@@ -93,15 +93,17 @@ int PTree :: emit() {
 int Program :: emit() {
 	//cout << "Program::emit() " << endl;
 	if (block && std_table) {
-		cout << ".section .init" << endl << endl;
-		cout << "	.globl main" << endl << endl;
-		cout << "	.globl _start" << endl;
-		cout << "	_start:" << endl << endl;
-		cout << "	b main "<< endl << endl;
 		cout << ".section .text" << endl << endl;
-		cout << "	main:" << endl;
+		cout << "	.globl main" << endl;
+		cout << "	.arch arm" << endl;
+		cout << "	.type	main, %function" << endl;
+		cout << "main:" << endl;
+		cout << "	push {lr}" << endl;
 
 		this->block->emit();
+
+		cout << "	pop {pc}" << endl;
+
 		this->std_table->emit();
 
 		return 0;
