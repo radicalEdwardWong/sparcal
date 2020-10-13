@@ -21,7 +21,7 @@ int VarAtt :: emit() {
 int Symtab :: emit() {
 	//cout << "Symtab::emit()" << endl;
 
-	cout << endl << ".section .bss" << endl << endl;
+	cout << endl << ".bss" << endl << endl;
 	// First (i=1) SymtabEntry object is for program name
 	for (int i=2; i < next_location; i++) {
 		symtab[i] -> emit();
@@ -93,7 +93,7 @@ int PTree :: emit() {
 int Program :: emit() {
 	//cout << "Program::emit() " << endl;
 	if (block && std_table) {
-		cout << ".section .text" << endl << endl;
+		cout << ".text" << endl << endl;
 		cout << "	.globl main" << endl;
 		cout << "	.arch arm" << endl;
 		cout << "	.type	main, %function" << endl;
