@@ -1,6 +1,6 @@
-/**************************************
- * pascarm - a pascal to ARM compiler *
- **************************************/
+/****************************************************
+ * sparcal - a pascal to SPARC (also ARM!) compiler *
+ ****************************************************/
 
 To build and run a quick example compilation, run the following from here:
 
@@ -12,8 +12,12 @@ To just build the compiler:
 
 To run the interpereter:
 
-	pascarm -l pascal_program.p	
+	sparcal -l pascal_program.p
+
+To run the emitter (output SPARC assembly to stdout):
+
+	sparcal -e pascal_program.p
 
 To run the emitter (output ARM assembly to stdout):
 
-	pascarm -e pascal_program.p	
+	sparcal -ea pascal_program.p

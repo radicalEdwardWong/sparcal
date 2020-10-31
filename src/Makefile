@@ -1,6 +1,6 @@
 # Makefile for Main module
 
-OUT = pascarm
+OUT = sparcal
 CC = g++ -Wall -Wextra -pedantic
 
 SUBDIR	=	main ctrl scanparse p_tree symtab interp emit
@@ -38,4 +38,4 @@ test:
 
 demo:
 			cat toast.p
-			../$(OUT) -e toast.p
+			../$(OUT) -ea toast.p

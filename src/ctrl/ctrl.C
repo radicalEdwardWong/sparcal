@@ -19,16 +19,18 @@ class Symtab;
 class Scope;
 
 int Option::list;
-
 int Option::emit;
+int Option::arm;
+
 Option::Option() {
 	//cout << "Option() " << endl;
 	list = 0;
 	emit = 0;
+	arm = 0;
 }
 
 int Option::option_info() {
-	return (list | emit);
+	return (list | emit | arm);
 }
 
 int Controller::open_file(char* source_file) {
@@ -63,7 +65,7 @@ Controller::Controller(int argc, char** argv) {
 	char *source_file = new char[80];
 	this->parse_tree = 0;
 	if (argc <= 1) {
-		cout << "	Usage: pascarm [-el] <filename>.p" << endl;
+		cout << "	Usage: sparcal [-ela] <filename>.p" << endl;
 		return;
 	} else {
 		for (int i = 1; i < argc; i++) {
@@ -78,6 +80,10 @@ Controller::Controller(int argc, char** argv) {
 
 					case 'e':
 						Option::emit = 2;
+						continue;
+
+					case 'a':
+						Option::arm = 4;
 						continue;
 
 					default:

@@ -5,12 +5,14 @@
 typedef class Option *POption;
 class Option {
 	public:
-		static int option_info();
 		friend class Controller;
+		static int option_info();
+		static bool isArmMode() { return arm != 0; }
 	private:
 		Option();
 		static int list;
 		static int emit;
+		static int arm;
 };
 
 
