@@ -4,12 +4,15 @@
 
 class LexTok;
 class Symtab;
+class Emitter;
+class SparcEmitter;
+class ArmEmitter;
 
 typedef class PTreeNode *PPTreeNode;
 class PTreeNode {
 	public:
 		PTreeNode();
-		virtual int emit();
+		virtual int emit(Emitter *emtr);
 		virtual int execute();
 		virtual void print();
 		virtual LexTok *get_let_tok() {return lt;}
@@ -37,8 +40,10 @@ typedef class Expr *PExpr;
 class Expr : public PTreeNode {
 	public:
 		Expr();
+		friend class SparcEmitter;
+		friend class ArmEmitter;
 		virtual int evaluate();
-		virtual int emit();
+		virtual int emit(Emitter *emtr);
 	protected:
 		int value;
 };
@@ -54,15 +59,17 @@ class NumFactor : public Factor {
 	public:
 		NumFactor(PPTreeNode NumLit);
 		int evaluate();
-		int emit();
+		int emit(Emitter *emtr);
 };
 
 typedef class VarAccessFactor *PVarAccessFactor;
 class VarAccessFactor : public Factor {
 	public:
 		VarAccessFactor(PPTreeNode Ident);
+		friend class SparcEmitter;
+		friend class ArmEmitter;
 		int evaluate();
-		int emit();
+		int emit(Emitter *emtr);
 	private:
 		PPTreeNode ident;
 };
@@ -82,7 +89,9 @@ class Statement : public PTreeNode, public LstSeqBldr {
 	public:
 		Statement() {;}
 		Statement(char *StmtText);
-		int emit();
+		friend class SparcEmitter;
+		friend class ArmEmitter;
+		int emit(Emitter *emtr);
 	protected:
 		char *stmt_text;
 };
@@ -92,7 +101,7 @@ class EmptyStmt : public Statement {
 	public:
 		EmptyStmt() {;}
 		int execute();
-		int emit();
+		int emit(Emitter *emtr);
 };
 
 typedef class AssignmentStmt *PAssignmentStmt;
@@ -102,8 +111,10 @@ class AssignmentStmt : public Statement {
 		AssignmentStmt(PPTreeNode ident,
 						PPTreeNode Expr,
 						char *stmtText);
+		friend class SparcEmitter;
+		friend class ArmEmitter;
 		int execute();
-		int emit();
+		int emit(Emitter *emtr);
 	private:
 		PPTreeNode ident; // left-hand side
 		PPTreeNode expr; // right-hand side
@@ -115,7 +126,7 @@ class WriteStmt : public Statement {
 		WriteStmt() {;}
 		WriteStmt(PPTreeNode Expr, char* StmtText);
 		int execute();
-		int emit();
+		int emit(Emitter *emtr);
 	private:
 		PPTreeNode expr;
 };
@@ -126,7 +137,7 @@ class StatementSeq : public PTreeNode {
 		StatementSeq() {;}
 		StatementSeq(PPTreeNode Stmt);
 		int execute();
-		int emit();
+		int emit(Emitter *emtr);
 		PPTreeNode append(PPTreeNode);
 	private:
 		Statement *seq_head;
@@ -139,7 +150,7 @@ class Block : public PTreeNode {
 		Block() {;}
 		Block(PPTreeNode StmtSeq);
 		int execute();
-		int emit();
+		int emit(Emitter *emtr);
 	private:
 		PPTreeNode stmt_seq;
 };
@@ -149,8 +160,10 @@ class Program : public PTreeNode {
 	public:
 		Program() {;}
 		Program(PPTreeNode Ident, PPTreeNode Block);
+		friend class SparcEmitter;
+		friend class ArmEmitter;
 		int execute();
-		int emit();
+		int emit(Emitter *emtr);
 		void print();
 	private:
 		Symtab *std_table;
@@ -163,7 +176,7 @@ class PTree {
 	public:
 		PTree(PPTreeNode Root);
 		int execute();
-		int emit();
+		int emit(Emitter *emtr);
 		void print();
 	private:
 		PPTreeNode root;

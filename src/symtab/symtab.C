@@ -9,6 +9,8 @@
 
 using namespace std;
 
+class Emitter;
+
 PSymtab Scope :: visible_symtab;
 
 SymtabEntry :: SymtabEntry(char *Name) {
@@ -16,7 +18,7 @@ SymtabEntry :: SymtabEntry(char *Name) {
 	name = Name;
 }
 
-int SymtabEntry :: emit() {
+int SymtabEntry :: emit(Emitter *emtr) {
 	cout << "SymtabEntry::emit() BASE CLASS!!!!" << endl;
 	return 0;
 }

@@ -12,6 +12,7 @@
 #include "../scanparse/scanparse.h"
 #include "../p_tree/p_tree.h"
 #include "../symtab/symtab.h"
+#include "../emit/emit.h"
 
 using namespace std;
 
@@ -101,7 +102,11 @@ Controller::Controller(int argc, char** argv) {
 		this->parse_tree = sp->parse_tree;
 
 		if (Option::emit) {
-			parse_tree->emit();
+			if (Option::isArmMode()) {
+				parse_tree->emit(new ArmEmitter);
+			} else {
+				parse_tree->emit(new SparcEmitter);
+			}
 		} else {
 			parse_tree->execute();
 		}

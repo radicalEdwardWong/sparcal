@@ -3,14 +3,19 @@
  */
 
 class Controller;
+class Emitter;
+class SparcEmitter;
+class ArmEmitter;
 
 typedef class SymtabEntry *PSymtabEntry;
 class SymtabEntry {
 	public:
 		SymtabEntry() {;}
 		SymtabEntry(char *Name);
+		friend class SparcEmitter;
+		friend class ArmEmitter;
 		friend class Symtab;
-		virtual int emit();
+		virtual int emit(Emitter *emtr);
 	protected:
 		char *name;
 };
@@ -21,7 +26,7 @@ class Symtab {
 		Symtab();
 		int	insert(PSymtabEntry);
 		PSymtabEntry lookup(char *);
-		int emit();
+		int emit(Emitter *emtr);
 	private:
 		int	tablesize;
 		int	next_location;
@@ -47,7 +52,7 @@ class VarAtt : public SymtabEntry {
 		VarAtt(char* Name, int Value);
 		void set_value(int Value) {value = Value;}
 		int get_value() {return value;}
-		int emit();
+		int emit(Emitter *emtr);
 	private:
 		int value;
 };

@@ -11,6 +11,8 @@
 
 #include "p_tree.h"
 
+class Emitter;
+
 using namespace std;
 
 LstSeqBldr :: LstSeqBldr() {
@@ -29,7 +31,7 @@ PTreeNode :: PTreeNode() {
 	lt = lex_tok;
 }
 
-int PTreeNode :: emit() {
+int PTreeNode :: emit(Emitter *emtr) {
 	cout << "PTreeNode::emit() BASECLASS !!!!!" << endl;
 	return 0;
 }
@@ -74,7 +76,7 @@ int Expr :: evaluate() {
 	return 0;
 }
 
-int Expr :: emit() {
+int Expr :: emit(Emitter *emtr) {
 	cout << "Expr:emit() BASE CLASS !!!" << endl;
 	return 0;
 }

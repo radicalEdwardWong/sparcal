@@ -9,162 +9,92 @@
 #include "../symtab/symtab.h"
 #include "../ctrl/ctrl.h"
 
+#include "emit.h"
+
 using namespace std;
 
-int VarAtt :: emit() {
+int VarAtt :: emit(PEmitter emtr) {
 	//cout << "VarAtt::emit()" << endl;
-	if (Option::isArmMode()) {
-		cout << "	.align 2" << endl;
-		cout << "	_" << SymtabEntry::name << ":" << endl;
-		cout << "	.space 4" << endl << endl;
-	} else {
-		cout << "	.align 4" << endl;
-		cout << "	.common _" << SymtabEntry::name;
-		cout << ",4" << endl;
-	}
+	emtr->emit(this);
 	return 0;
 }
 
-int Symtab :: emit() {
+int Symtab :: emit(PEmitter emtr) {
 	//cout << "Symtab::emit()" << endl;
-	if (Option::isArmMode()) {
-		cout << endl << ".bss" << endl << endl;
-	} else {
-		cout << "	.bss" << endl;
-	}
+	emtr->emit(this);
+
 	// First (i=1) SymtabEntry object is for program name
 	for (int i=2; i < next_location; i++) {
-		symtab[i] -> emit();
+		symtab[i] -> emit(emtr);
 	}
 	return 0;
 }
 
-int NumFactor :: emit() {
+int NumFactor :: emit(PEmitter emtr) {
 	//cout << "NumFactor::emit()" << endl;
-	if (Option::isArmMode()) {
-		cout << "	mov r0, #" << Expr::value << endl;
-	} else {
-		cout << "	mov	0x" << hex << Expr::value << ",%o0" << endl;
-	}
+	emtr->emit(this);
 	return 0;
 }
 
-int VarAccessFactor :: emit() {
+int VarAccessFactor :: emit(PEmitter emtr) {
 	//cout << "VarAccessFactor::emit()" << endl;
-	char *ident_str = PIdent(ident)->get_name();
-	if (Option::isArmMode()) {
-		cout << "	ldr r0,=" << ident_str << endl;
-	} else {
-		cout << "	sethi	%hi(_" ;
-			cout << ident_str;
-			cout << "),%o0" << endl;
-		cout << "	ld	[%o0+%lo(_" ;
-			cout << ident_str;
-			cout << ")],%o0" << endl;
-	}
+	emtr->emit(this);
 	return 0;
 }
 
-int Statement :: emit() {
-	if (Option::isArmMode()) {
-		cout << endl << "/* " << stmt_text << " */" << endl;
-	} else {
-		cout << "! " << stmt_text << endl;
-	}
+int Statement :: emit(PEmitter emtr) {
+	emtr->emit(this);
 	return 0;
 }
 
-int EmptyStmt :: emit() {
+int EmptyStmt :: emit(PEmitter emtr) {
 	//cout << "EmptyStmt::emit()" << endl;
 	return 0;
 }
 
-int AssignmentStmt :: emit() {
+int AssignmentStmt :: emit(PEmitter emtr) {
 	//cout << "AssignmentStmt::emit()" << endl;
-	Statement::emit();
-	expr->emit();
+	Statement::emit(emtr);
+	expr->emit(emtr);
 
-	if (Option::isArmMode()) {
-		char *ident_str = PIdent(ident)->get_name();
-		cout << "	str r0,=" << ident_str << endl;
-	} else {
-		char *ident_str = PIdent(ident)->get_name();
-		cout << "	sethi	%hi(_" ;
-			cout << ident_str;
-			cout << ">,%o1" << endl;
-		cout << "	st	%o0,[%1o+%lo(_";
-			cout << ident_str;
-			cout << ")]" << endl;
-	}
+	emtr->emit(this);
 	return 0;
 }
 
-int WriteStmt :: emit() {
+int WriteStmt :: emit(PEmitter emtr) {
 	//cout << "WriteStmt::emit()" << endl;
-	Statement::emit();
-	expr->emit();
-	if (Option::isArmMode()) {
-		cout << "	bl _Writeln" << endl;
-	} else {
-		cout << "	call	_Writeln,1" << endl;
-		cout << "	nop" << endl;
-	}
+	Statement::emit(emtr);
+	expr->emit(emtr);
+	emtr->emit(this);
 	return 0;
 }
 
-int StatementSeq :: emit() {
+int StatementSeq :: emit(PEmitter emtr) {
 	//cout << "StatementSeq::emit() " << endl;
 	PPTreeNode p = this->seq_head;
 	while (p) {
-		p->emit();
+		p->emit(emtr);
 		p = PStatement(PStatement(p)->get_next());
 	}
 	return 0;
 }
 
-int PTree :: emit() {
+int PTree :: emit(PEmitter emtr) {
 	//cout << "PTree::emit() " << endl;
 	if (!root) {
 		cerr << "PTree::emit - LOGIC ERROR" << endl;
 		return 0;
 	} else {
-		return root->emit();
+		return root->emit(emtr);
 	}
 }
 
-int Program :: emit() {
+int Program :: emit(PEmitter emtr) {
 	//cout << "Program::emit() " << endl;
 	if (block && std_table) {
-		if (Option::isArmMode()) {
-			cout << "	bl _Writeln" << endl;
-			cout << ".text" << endl << endl;
-			cout << "	.globl main" << endl;
-			cout << "	.arch arm" << endl;
-			cout << "	.type	main, %function" << endl;
-			cout << "main:" << endl;
-			cout << "	push {lr}" << endl;
-	
-			this->block->emit();
-	
-			cout << "	pop {pc}" << endl;
-		} else {
-			cout << "	.text" << endl;
-			cout << "	.global _main" << endl << endl;
-	
-			cout << "_main:" << endl;
-			cout << "	save	%sp,-MINWINDOW,%sp" << endl;
-	
-			this->block->emit();
-	
-			cout << "	ret" << endl;
-			cout << endl;
-			cout << "	.data" << endl;
-			cout <<	"#define DW(x)	(((x)+7&(~0x07))" << endl;
-			cout << "#define MINFRAME ((16+1+6)*4)" << endl;
-			cout << "	MINWINDOW = 96 /* DW(MINFRAME) */" << endl;
-		}
+		emtr->emit(this);
 
-		this->std_table->emit();
+		this->std_table->emit(emtr);
 
 		return 0;
 	} else {
@@ -173,8 +103,10 @@ int Program :: emit() {
 	}
 }
 
-int Block :: emit() {
+int Block :: emit(PEmitter emtr) {
 	//cout << "Block::emit() " << endl;
-	return this->stmt_seq->emit();
+	return this->stmt_seq->emit(emtr);
 }
 
+#include "sparc_emit.C"
+#include "arm_emit.C"
