@@ -22,16 +22,18 @@ class Scope;
 int Option::list;
 int Option::emit;
 int Option::arm;
+int Option::check;
 
 Option::Option() {
 	//cout << "Option() " << endl;
 	list = 0;
 	emit = 0;
 	arm = 0;
+	check = 0;
 }
 
 int Option::option_info() {
-	return (list | emit | arm);
+	return (list | emit | arm | check);
 }
 
 int Controller::open_file(char* source_file) {
@@ -87,6 +89,10 @@ Controller::Controller(int argc, char** argv) {
 						Option::arm = 4;
 						continue;
 
+					case 'C':
+						Option::check = 8;
+						continue;
+
 					default:
 						cerr << "Unknown option " <<
 										*argv[i] << endl;
@@ -101,13 +107,17 @@ Controller::Controller(int argc, char** argv) {
 		PScanParse sp = new ScanParse;
 		this->parse_tree = sp->parse_tree;
 
+		if (Option::check) {
+			cout << "Type checker not yet implemented!! b-(>_<)-d" << endl;
+		}
+
 		if (Option::emit) {
-			if (Option::isArmMode()) {
+			if (Option::arm) {
 				parse_tree->emit(new ArmEmitter);
 			} else {
 				parse_tree->emit(new SparcEmitter);
 			}
-		} else {
+		} else if (Option::list) {
 			parse_tree->execute();
 		}
 	}
