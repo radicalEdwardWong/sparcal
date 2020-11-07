@@ -15,6 +15,7 @@ int ck_reserved_wd();
 
 digit				[0-9]
 digits				{digit}+
+real				({digits}|[0-9]*\.{digits})
 letter				[A-Za-z]
 letter_or_digit		({letter}|{digit})
 ident				{letter}{letter_or_digit}*
@@ -48,8 +49,12 @@ cr					[\n]
 				return DOTTK;}
 
 {digits}	{ckout();
-			lex_tok = new LexTok(yylineno, NUMLITERALTK, yytext);
-			return NUMLITERALTK;}
+			lex_tok = new LexTok(yylineno, INTLITERALTK, yytext);
+			return INTLITERALTK;}
+
+{real}		{ckout();
+			lex_tok = new LexTok(yylineno, REALLITERALTK, yytext);
+			return REALLITERALTK;}
 
 {ident}		{ckout();
 			int actual_tk = ck_reserved_wd();
@@ -90,7 +95,8 @@ rwtable_str rwtable[] = {
 	(char *)"begin",	BEGINTK,
 	(char *)"end",		ENDTK,
 	(char *)"program",	PROGRAMTK,
-	(char *)"writeln",	WRITETK
+	(char *)"writelnInt",	INTWRITETK,
+	(char *)"writelnReal",	REALWRITETK
 };
 
 #define LEN(x)		(sizeof(x)/sizeof((x)[0]))

@@ -2,5 +2,7 @@
 	begin
 		eyy := 2;
 		bee := eyy;
-		writeln(bee)
+		sea := 3.14;
+		writelnInt(bee);
+		writelnReal(sea)
 	end.

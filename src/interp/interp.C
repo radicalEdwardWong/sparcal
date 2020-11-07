@@ -10,32 +10,68 @@
 
 using namespace std;
 
-class AssignmentStmt;
+int PTreeNode :: execute() {
+	cout << "PTreeNode::execute() BASE CLASS!!!" << endl;
+	return 0;
+}
+
+int Statement :: execute() {
+	cout << "Statement::execute() BASE CLASS!!!" << endl;
+	return 0;
+}
 
 int EmptyStmt :: execute() {
 	//cout << "EmptyStmt::execute()" << endl;
 	return 0;
 }
 
-int AssignmentStmt :: execute() {
-	//cout << "AssignmentStmt::execute() " << endl;
-	int rval = PExpr(expr)->evaluate();
+int IntAssignmentStmt :: execute() {
+	//cout << "IntAssignmentStmt::execute() " << endl;
 
 	char *name = PIdent(ident)->get_name();
 	PSymtab scp = Scope::get_visible_symtab();
 	PSymtabEntry found_it = scp->lookup(name);
 	if (!found_it) {
 		// TODO: delegate to Error class
-		cout << "AssignmentStmt::execute() LOGIC ERROR" << endl;
+		cout << "IntAssignmentStmt::execute() LOGIC ERROR" << endl;
 	} else {
-		PVarAtt(found_it)->set_value(rval);
+		int rval = PIntExpr(expr)->evaluate();
+		PIntVarAtt(found_it)->set_value(rval);
+	}
+	return 0;
+}
+
+int RealAssignmentStmt :: execute() {
+	//cout << "RealAssignmentStmt::execute() " << endl;
+
+	char *name = PIdent(ident)->get_name();
+	PSymtab scp = Scope::get_visible_symtab();
+	PSymtabEntry found_it = scp->lookup(name);
+	if (!found_it) {
+		// TODO: delegate to Error class
+		cout << "RealAssignmentStmt::execute() LOGIC ERROR" << endl;
+	} else {
+		RealNumber *rval = PRealExpr(expr)->evaluate();
+		PRealVarAtt(found_it)->set_value(rval);
 	}
 	return 0;
 }
 
 int WriteStmt :: execute() {
-	//cout << "WriteStmt::execute() " << expr << endl;
-	cout << "   -> " << PExpr(expr) -> evaluate() << endl;
+	cout << "WriteStmt::execute() BASE CLASS !!!" << endl;
+	return 0;
+}
+
+int IntWriteStmt :: execute() {
+	//cout << "IntWriteStmt::execute() " << expr << endl;
+	cout << "   -> " << PIntExpr(expr) -> evaluate() << endl;
+	return 0;
+}
+
+int RealWriteStmt :: execute() {
+	//cout << "RealWriteStmt::execute() " << expr << endl;
+	PRealNumber real = PRealExpr(expr) -> evaluate();
+	cout << "   -> " << real->integer << "." << real->decimal << endl;
 	return 0;
 }
 

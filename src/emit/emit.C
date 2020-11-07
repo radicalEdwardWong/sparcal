@@ -13,8 +13,14 @@
 
 using namespace std;
 
-int VarAtt :: emit(PEmitter emtr) {
-	//cout << "VarAtt::emit()" << endl;
+int IntVarAtt :: emit(PEmitter emtr) {
+	//cout << "IntVarAtt::emit()" << endl;
+	emtr->emit(this);
+	return 0;
+}
+
+int RealVarAtt :: emit(PEmitter emtr) {
+	//cout << "RealVarAtt::emit()" << endl;
 	emtr->emit(this);
 	return 0;
 }
@@ -30,14 +36,26 @@ int Symtab :: emit(PEmitter emtr) {
 	return 0;
 }
 
-int NumFactor :: emit(PEmitter emtr) {
-	//cout << "NumFactor::emit()" << endl;
+int IntFactor :: emit(PEmitter emtr) {
+	//cout << "IntFactor::emit()" << endl;
 	emtr->emit(this);
 	return 0;
 }
 
-int VarAccessFactor :: emit(PEmitter emtr) {
-	//cout << "VarAccessFactor::emit()" << endl;
+int RealFactor :: emit(PEmitter emtr) {
+	//cout << "RealFactor::emit()" << endl;
+	emtr->emit(this);
+	return 0;
+}
+
+int IntVarAccessFactor :: emit(PEmitter emtr) {
+	//cout << "IntVarAccessFactor::emit()" << endl;
+	emtr->emit(this);
+	return 0;
+}
+
+int RealVarAccessFactor :: emit(PEmitter emtr) {
+	//cout << "RealVarAccessFactor::emit()" << endl;
 	emtr->emit(this);
 	return 0;
 }
@@ -52,8 +70,17 @@ int EmptyStmt :: emit(PEmitter emtr) {
 	return 0;
 }
 
-int AssignmentStmt :: emit(PEmitter emtr) {
-	//cout << "AssignmentStmt::emit()" << endl;
+int IntAssignmentStmt :: emit(PEmitter emtr) {
+	//cout << "IntAssignmentStmt::emit()" << endl;
+	Statement::emit(emtr);
+	expr->emit(emtr);
+
+	emtr->emit(this);
+	return 0;
+}
+
+int RealAssignmentStmt :: emit(PEmitter emtr) {
+	//cout << "RealAssignmentStmt::emit()" << endl;
 	Statement::emit(emtr);
 	expr->emit(emtr);
 

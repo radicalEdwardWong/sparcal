@@ -6,6 +6,7 @@ class Controller;
 class Emitter;
 class SparcEmitter;
 class ArmEmitter;
+class RealNumber;
 
 typedef class SymtabEntry *PSymtabEntry;
 class SymtabEntry {
@@ -45,14 +46,24 @@ class Scope {
 		static Symtab *visible_symtab;
 };
 
-typedef class VarAtt *PVarAtt;
-class VarAtt : public SymtabEntry {
+typedef class IntVarAtt *PIntVarAtt;
+class IntVarAtt : public SymtabEntry {
 	public:
-		VarAtt() {;}
-		VarAtt(char* Name, int Value);
+		IntVarAtt(char* Name, int Value);
 		void set_value(int Value) {value = Value;}
 		int get_value() {return value;}
 		int emit(Emitter *emtr);
 	private:
 		int value;
+};
+
+typedef class RealVarAtt *PRealVarAtt;
+class RealVarAtt : public SymtabEntry {
+	public:
+		RealVarAtt(char* Name, RealNumber *Value);
+		void set_value(RealNumber *Value) {value = Value;}
+		RealNumber *get_value() {return value;}
+		int emit(Emitter *emtr);
+	private:
+		RealNumber *value;
 };

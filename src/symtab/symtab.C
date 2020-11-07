@@ -23,11 +23,15 @@ int SymtabEntry :: emit(Emitter *emtr) {
 	return 0;
 }
 
-VarAtt :: VarAtt(char *Name, int Value) : SymtabEntry(Name) {
-	//cout << "VarAtt(Name, Value)" << endl;
+IntVarAtt :: IntVarAtt(char *Name, int Value) : SymtabEntry(Name) {
+	//cout << "IntVarAtt(Name, Value)" << endl;
 	value = Value;
 }
 
+RealVarAtt :: RealVarAtt(char *Name, RealNumber *Value) : SymtabEntry(Name) {
+	//cout << "RealVarAtt(Name, Value)" << endl;
+	value = Value;
+}
 
 /* symtab */
 

@@ -36,18 +36,36 @@ int PTreeNode :: emit(Emitter *emtr) {
 	return 0;
 }
 
-int PTreeNode :: execute() {
-	cout << "PTreeNode::execute() BASECLASS !!!!!" << endl;
-	return 0;
-}
-
 void PTreeNode :: print() {
 	cout << "PTreeNode::print() " << " lex_tok " << (lt->token) << endl;
 }
 
-NumLiteral :: NumLiteral() {
-	//cout << "NumLiteral" << endl;
+IntLiteral :: IntLiteral() {
+	//cout << "IntLiteral" << endl;
 	value = atoi(this->PTreeNode::lt->get_lexeme());
+}
+
+RealLiteral :: RealLiteral() {
+	//cout << "RealLiteral" << endl;
+	string str = this->PTreeNode::lt->get_lexeme();
+	string intDigits = "";
+	string decimalDigits = "";
+	bool decimalReached = false;
+	for (int i = 0; i < str.length(); i++) {
+		char c = str[i];
+		if ('.' == c) {
+			decimalReached = true;
+			continue;
+		}
+		if (decimalReached) {
+			decimalDigits += c;
+		} else {
+			intDigits += c;
+		}
+	}
+	decimalDigits += '\0';
+	intDigits += '\0';
+	value = new RealNumber(stoi((string)intDigits), stoi((string)decimalDigits));
 }
 
 Ident :: Ident() {
@@ -57,7 +75,7 @@ Ident :: Ident() {
 	PSymtab scp = Scope::get_visible_symtab();
 	PSymtabEntry found = scp->lookup(name);
 	if (!found) {
-		PVarAtt va = new VarAtt(name, 0);
+		PIntVarAtt va = new IntVarAtt(name, 0);
 		scp->insert(va);
 	}
 }
@@ -67,42 +85,71 @@ char *Ident :: get_name() {
 	return this->PTreeNode::lt->get_lexeme();
 }
 
-Expr :: Expr() {
-	//cout << "Expr" << endl;
-}
-
-int Expr :: evaluate() {
-	cout << "Expr:evaluate() BASE CLASS !!!" << endl;
-	return 0;
-}
-
 int Expr :: emit(Emitter *emtr) {
 	cout << "Expr:emit() BASE CLASS !!!" << endl;
 	return 0;
 }
 
-Factor :: Factor() {
-	//cout << "Factor() " << endl;
+IntExpr :: IntExpr() {
+	//cout << "IntExpr" << endl;
 }
 
-NumFactor :: NumFactor(PPTreeNode NumLit) {
-	//cout << "NumFacor() " << endl;
-	if (!NumLit) {
-		cerr << "NumFactor - LOGIC ERROR" << endl;
+int IntExpr :: evaluate() {
+	cout << "IntExpr:evaluate() BASE CLASS !!!" << endl;
+	return 0;
+}
+
+int IntExpr :: emit(Emitter *emtr) {
+	cout << "IntExpr:emit() BASE CLASS !!!" << endl;
+	return 0;
+}
+
+RealExpr :: RealExpr() {
+	//cout << "RealExpr" << endl;
+}
+
+PRealNumber RealExpr :: evaluate() {
+	cout << "RealExpr:evaluate() BASE CLASS !!!" << endl;
+	return 0;
+}
+
+int RealExpr :: emit(Emitter *emtr) {
+	cout << "RealExpr:emit() BASE CLASS !!!" << endl;
+	return 0;
+}
+
+IntFactor :: IntFactor(PPTreeNode IntLit) {
+	//cout << "IntFacor() " << endl;
+	if (!IntLit) {
+		cerr << "IntFactor - LOGIC ERROR" << endl;
 	}
-	Expr::value = PNumLiteral(NumLit)->get_value();
+	IntExpr::value = PIntLiteral(IntLit)->get_value();
 	//cout << " value " << Expr::value << endl;
 }
 
-int NumFactor :: evaluate() {
-	//cout << "NumFactor::evaluate()" << endl;
-	return Expr::value;
+int IntFactor :: evaluate() {
+	//cout << "IntFactor::evaluate()" << endl;
+	return value;
 }
 
-VarAccessFactor :: VarAccessFactor(PPTreeNode Ident) {
-	//cout << "VarAccessFactor() " << endl;
+RealFactor :: RealFactor(PPTreeNode RealLit) {
+	//cout << "RealFacor() " << endl;
+	if (!RealLit) {
+		cerr << "RealFactor - LOGIC ERROR" << endl;
+	}
+	RealExpr::value = PRealLiteral(RealLit)->get_value();
+	//cout << " value " << Expr::value << endl;
+}
+
+PRealNumber RealFactor :: evaluate() {
+	//cout << "RealFactor::evaluate()" << endl;
+	return value;
+}
+
+IntVarAccessFactor :: IntVarAccessFactor(PPTreeNode Ident) {
+	//cout << "IntVarAccessFactor() " << endl;
 	if (!Ident) {
-		cerr << "VarAccessFactor() - LOGIC ERROR" << endl;
+		cerr << "IntVarAccessFactor() - LOGIC ERROR" << endl;
 	}
 	ident = Ident;
 	char *name = PIdent(ident) -> get_name();
@@ -110,20 +157,48 @@ VarAccessFactor :: VarAccessFactor(PPTreeNode Ident) {
 	PSymtabEntry found = scp->lookup(name);
 	if (!found) {
 		cerr << "	" << *name << " name but not set" << endl;
-		PVarAtt va = new VarAtt(name, 0);
+		PIntVarAtt va = new IntVarAtt(name, 0);
 		scp->insert(va);
-		Expr::value = 0;
+		IntExpr::value = 0;
 	} else {
-		Expr::value = PVarAtt(found)->get_value();
+		IntExpr::value = PIntVarAtt(found)->get_value();
 	}
 }
 
-int VarAccessFactor :: evaluate() {
-	//cout << "VarAccessFactor::evaluate()" << endl;
+int IntVarAccessFactor :: evaluate() {
+	//cout << "IntVarAccessFactor::evaluate()" << endl;
 	char *name = PIdent(ident)->get_name();
 	PSymtab scp = Scope::get_visible_symtab();
 	PSymtabEntry found = scp->lookup(name);
-	return PVarAtt(found)->get_value();
+	return PIntVarAtt(found)->get_value();
+}
+
+RealVarAccessFactor :: RealVarAccessFactor(PPTreeNode Ident) {
+	//cout << "RealVarAccessFactor() " << endl;
+	if (!Ident) {
+		cerr << "RealVarAccessFactor() - LOGIC ERROR" << endl;
+	}
+	ident = Ident;
+	char *name = PIdent(ident) -> get_name();
+	PSymtab scp = Scope::get_visible_symtab();
+	PSymtabEntry found = scp->lookup(name);
+	if (!found) {
+		cerr << "	" << *name << " name but not set" << endl;
+		PRealNumber realNum = new RealNumber(0, 0);
+		PRealVarAtt va = new RealVarAtt(name, realNum);
+		scp->insert(va);
+		RealExpr::value = realNum;
+	} else {
+		RealExpr::value = PRealVarAtt(found)->get_value();
+	}
+}
+
+PRealNumber RealVarAccessFactor :: evaluate() {
+	//cout << "RealVarAccessFactor::evaluate()" << endl;
+	char *name = PIdent(ident)->get_name();
+	PSymtab scp = Scope::get_visible_symtab();
+	PSymtabEntry found = scp->lookup(name);
+	return PRealVarAtt(found)->get_value();
 }
 
 Statement :: Statement(char *StmtText) {

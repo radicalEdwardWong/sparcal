@@ -23,10 +23,37 @@ class PTreeNode {
 typedef class NumLiteral *PNumLiteral;
 class NumLiteral : public PTreeNode {
 	public:
-		NumLiteral();
+		NumLiteral(){;}
+};
+
+typedef class IntLiteral *PIntLiteral;
+class IntLiteral : public NumLiteral {
+	public:
+		IntLiteral();
 		int get_value() {return value;}
 	private:
 		int value;
+};
+
+typedef class RealNumber *PRealNumber;
+class RealNumber {
+	public:
+		RealNumber() {;}
+		RealNumber(int Int, int Decimal) {
+			integer = Int;
+			decimal = Decimal;
+		}
+		int integer;
+		int decimal;
+};
+
+typedef class RealLiteral *PRealLiteral;
+class RealLiteral : public NumLiteral {
+	public:
+		RealLiteral();
+		PRealNumber get_value() { return value; }
+	private:
+		PRealNumber value;
 };
 
 typedef class Ident *PIdent;
@@ -39,36 +66,77 @@ class Ident : public PTreeNode {
 typedef class Expr *PExpr;
 class Expr : public PTreeNode {
 	public:
-		Expr();
+		Expr() {;}
+		virtual int emit(Emitter *emtr);
+};
+
+typedef class IntExpr *PIntExpr;
+class IntExpr : public PTreeNode {
+	public:
+		IntExpr();
 		friend class SparcEmitter;
 		friend class ArmEmitter;
-		virtual int evaluate();
 		virtual int emit(Emitter *emtr);
+		virtual int evaluate();
 	protected:
 		int value;
 };
 
-typedef class Factor *PFactor;
-class Factor : public Expr {
+typedef class RealExpr *PRealExpr;
+class RealExpr : public PTreeNode {
 	public:
-		Factor();
+		RealExpr();
+		friend class SparcEmitter;
+		friend class ArmEmitter;
+		virtual int emit(Emitter *emtr);
+		virtual PRealNumber evaluate();
+	protected:
+		PRealNumber value;
 };
 
-typedef class NumFactor *PNumFactor;
-class NumFactor : public Factor {
+typedef class IntFactor *PIntFactor;
+class IntFactor : public IntExpr {
 	public:
-		NumFactor(PPTreeNode NumLit);
+		IntFactor() {;}
+		IntFactor(PPTreeNode IntLit);
+		friend class SparcEmitter;
+		friend class ArmEmitter;
 		int evaluate();
 		int emit(Emitter *emtr);
 };
 
-typedef class VarAccessFactor *PVarAccessFactor;
-class VarAccessFactor : public Factor {
+typedef class RealFactor *PRealFactor;
+class RealFactor : public RealExpr {
 	public:
-		VarAccessFactor(PPTreeNode Ident);
+		RealFactor() {;}
+		RealFactor(PPTreeNode RealLit);
+		friend class SparcEmitter;
+		friend class ArmEmitter;
+		PRealNumber evaluate();
+		int emit(Emitter *emtr);
+};
+
+typedef class IntVarAccessFactor *PIntVarAccessFactor;
+class IntVarAccessFactor : public IntFactor {
+	public:
+		IntVarAccessFactor() {;}
+		IntVarAccessFactor(PPTreeNode Ident);
 		friend class SparcEmitter;
 		friend class ArmEmitter;
 		int evaluate();
+		int emit(Emitter *emtr);
+	private:
+		PPTreeNode ident;
+};
+
+typedef class RealVarAccessFactor *PRealVarAccessFactor;
+class RealVarAccessFactor : public RealFactor {
+	public:
+		RealVarAccessFactor() {;}
+		RealVarAccessFactor(PPTreeNode Ident);
+		friend class SparcEmitter;
+		friend class ArmEmitter;
+		PRealNumber evaluate();
 		int emit(Emitter *emtr);
 	private:
 		PPTreeNode ident;
@@ -92,6 +160,7 @@ class Statement : public PTreeNode, public LstSeqBldr {
 		friend class SparcEmitter;
 		friend class ArmEmitter;
 		int emit(Emitter *emtr);
+		int execute();
 	protected:
 		char *stmt_text;
 };
@@ -100,8 +169,8 @@ typedef class EmptyStmt *PEmptyStmt;
 class EmptyStmt : public Statement {
 	public:
 		EmptyStmt() {;}
-		int execute();
 		int emit(Emitter *emtr);
+		int execute();
 };
 
 typedef class AssignmentStmt *PAssignmentStmt;
@@ -110,14 +179,42 @@ class AssignmentStmt : public Statement {
 		AssignmentStmt() {;}
 		AssignmentStmt(PPTreeNode ident,
 						PPTreeNode Expr,
-						char *stmtText);
-		friend class SparcEmitter;
-		friend class ArmEmitter;
-		int execute();
-		int emit(Emitter *emtr);
-	private:
+						char *stmtText
+					);
 		PPTreeNode ident; // left-hand side
 		PPTreeNode expr; // right-hand side
+};
+
+typedef class IntAssignmentStmt *PIntAssignmentStmt;
+class IntAssignmentStmt : public AssignmentStmt {
+	public:
+		IntAssignmentStmt() {;}
+		IntAssignmentStmt(PPTreeNode ident,
+						PPTreeNode Expr,
+						char *stmtText
+					) : AssignmentStmt(ident,
+						Expr,
+						stmtText) {}
+		friend class SparcEmitter;
+		friend class ArmEmitter;
+		int emit(Emitter *emtr);
+		int execute();
+};
+
+typedef class RealAssignmentStmt *PRealAssignmentStmt;
+class RealAssignmentStmt : public AssignmentStmt {
+	public:
+		RealAssignmentStmt() {;}
+		RealAssignmentStmt(PPTreeNode ident,
+						PPTreeNode Expr,
+						char *stmtText
+					) : AssignmentStmt(ident,
+						Expr,
+						stmtText) {}
+		friend class SparcEmitter;
+		friend class ArmEmitter;
+		int emit(Emitter *emtr);
+		int execute();
 };
 
 typedef class WriteStmt *PWriteStmt;
@@ -125,10 +222,26 @@ class WriteStmt : public Statement {
 	public:
 		WriteStmt() {;}
 		WriteStmt(PPTreeNode Expr, char* StmtText);
-		int execute();
 		int emit(Emitter *emtr);
-	private:
+		virtual int execute();
+	protected:
 		PPTreeNode expr;
+};
+
+typedef class IntWriteStmt *PIntWriteStmt;
+class IntWriteStmt : public WriteStmt {
+	public:
+		IntWriteStmt() {;}
+		IntWriteStmt(PPTreeNode Expr, char* StmtText) : WriteStmt(Expr, StmtText) {}
+		int execute();
+};
+
+typedef class RealWriteStmt *PRealWriteStmt;
+class RealWriteStmt : public WriteStmt {
+	public:
+		RealWriteStmt() {;}
+		RealWriteStmt(PPTreeNode Expr, char* StmtText) : WriteStmt(Expr, StmtText) {}
+		int execute();
 };
 
 typedef class StatementSeq *PStatementSeq;
