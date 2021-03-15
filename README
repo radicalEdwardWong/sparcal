@@ -2,6 +2,9 @@
  * sparcal - a pascal to SPARC (also ARM!) compiler *
  ****************************************************/
 
+Original source from: Building Your Own Compiler With C++ (Jim Holmes)
+
+
 To build and run a quick example compilation, run the following from here:
 
 	pushd src && make clean && make && make demo && popd
